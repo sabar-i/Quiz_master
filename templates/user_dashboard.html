@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Welcome, {{ current_user.username }}!</h2>
+
+<h3>Available Quizzes</h3>
+{% if quizzes %}
+    <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <a href="{{ url_for('user.start_quiz', quiz_id=quiz.id) }}">{{ quiz.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No quizzes available.</p>
+{% endif %}
+
+<h3>Your Past Scores</h3>
+{% if scores %}
+    <ul>
+        {% for score in scores %}
+            <li>Score: {{ score.score }} - Quiz: {{score.quiz_id}} - Date: {{ score.date_taken.strftime('%Y-%m-%d') }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No quiz attempts yet.</p>
+{% endif %}
+<h3>Your Performance vs Others</h3>
+<div style="width: 80%; max-width: 600px; margin: auto;">
+    <canvas id="quizPerformanceChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let performanceData = {{ performance_data | tojson }};
+
+    let quizTitles = performanceData.map(data => data.quiz_title);
+    let userScores = performanceData.map(data => data.user_highest);
+    let highestScores = performanceData.map(data => data.highest_score);
+    let averageScores = performanceData.map(data => data.average_score);
+
+    let ctx = document.getElementById("quizPerformanceChart").getContext("2d");
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: quizTitles,
+            datasets: [
+                {
+                    label: "Your Highest Score",
+                    data: userScores,
+                    backgroundColor: "rgba(54, 162, 235, 0.6)"
+                },
+                {
+                    label: "Highest Score (All Users)",
+                    data: highestScores,
+                    backgroundColor: "rgba(255, 99, 132, 0.6)"
+                },
+                {
+                    label: "Average Score",
+                    data: averageScores,
+                    backgroundColor: "rgba(75, 192, 192, 0.6)"
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: "top" }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

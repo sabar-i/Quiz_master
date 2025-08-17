@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ quiz.title }}</h2>
+
+<!-- Timer Display -->
+<div id="timer" style="font-size: 20px; font-weight: bold; color: red;">
+    Time Left: <span id="time"></span>
+</div>
+
+<form method="POST" id="quizForm">
+    {% for question in questions %}
+        <div class="form-group">
+            <p><strong>{{ loop.index }}. {{ question.question_text }}</strong></p>
+            {% for option in ['option_1', 'option_2', 'option_3', 'option_4'] %}
+                <div>
+                    <input type="radio" name="question_{{ question.id }}" value="{{ question[option] }}" required>
+                    {{ question[option] }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Submit Quiz</button>
+</form>
+
+<!-- Timer Script -->
+<script>
+    let timeLeft = {{ total_seconds }}; // Total seconds from Python
+
+    function updateTimer() {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        document.getElementById("time").innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        timeLeft--;
+
+        if (timeLeft < 0) {
+            document.getElementById("quizForm").submit(); // Auto-submit when time runs out
+        } else {
+            setTimeout(updateTimer, 1000);
+        }
+    }
+
+    updateTimer();
+</script>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Quiz Score</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label>Username:</label>
+        <input type="text" value="{{ score.user.username }}" class="form-control" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>Quiz Title:</label>
+        <input type="text" value="{{ score.quiz.title }}" class="form-control" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>Date Taken:</label>
+        <input type="text" value="{{ score.date_taken }}" class="form-control" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>Score:</label>
+        <input type="number" name="score" value="{{ score.score }}" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Score</button>
+</form>
+{% endblock %}

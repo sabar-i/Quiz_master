@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Search Results for "{{ query }}" in {{ category }}</h1>
+
+{% if results %}
+    <table class="styled-table">
+        <tr>
+            {% if category == "users" %}
+                <th>Name</th><th>Email</th><th>Role</th>
+            {% elif category == "subjects" %}
+                <th>Name</th><th>Description</th>
+            {% elif category == "quizzes" %}
+                <th>Title</th><th>Chapter</th><th>Date</th>
+            {% elif category == "questions" %}
+                <th>Question</th><th>Quiz</th>
+            {% endif %}
+        </tr>
+        {% for item in results %}
+        <tr>
+            {% if category == "users" %}
+                <td>{{ item.full_name }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.role }}</td>
+            {% elif category == "subjects" %}
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+            {% elif category == "quizzes" %}
+                <td>{{ item.title }}</td>
+                <td>{{ item.chapter.name }}</td>
+                <td>{{ item.date_of_quiz }}</td>
+            {% elif category == "questions" %}
+                <td>{{ item.text }}</td>
+                <td>{{ item.quiz.title }}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+
+{% endblock %}

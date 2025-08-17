@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <!-- Flash Messages (Only Show Login Errors) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              {% if "Incorrect password. Please try again" in message or "User does not exist. Please sign up." in message or "Login successful!" in message  %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.email.label }} {{ form.email() }}</p>
+            <p>{{ form.password.label }} {{ form.password() }}</p>
+            <p>{{ form.submit(class="btn-submit") }}</p>
+        </form>
+    </div>
+{% endblock %}

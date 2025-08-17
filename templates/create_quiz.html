@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Create Quiz{% endblock %}
+
+{% block content %}
+<h2>Create a New Quiz</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="title">Quiz Title</label>
+        <input type="text" id="title" name="title" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="subject">Subject</label>
+        <select id="subject" name="subject_id" class="form-control" required>
+            <option value="">Select Subject</option>
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="chapter">Chapter</label>
+        <select id="chapter" name="chapter_id" class="form-control" required>
+            <option value="">Select Chapter</option>
+            <!-- Chapters will be populated dynamically based on the selected subject -->
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="date_of_quiz">Date of Quiz</label>
+        <input type="date" id="date_of_quiz" name="date_of_quiz" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="time_duration">Time Duration (HH:MM)</label>
+        <input type="time" id="time_duration" name="time_duration" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="remarks">Remarks (optional)</label>
+        <textarea id="remarks" name="remarks" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create Quiz</button>
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+
+<!-- JavaScript for Dynamic Chapter Loading -->
+<script>
+    document.getElementById("subject").addEventListener("change", function() {
+        let subjectId = this.value;
+        let chapterDropdown = document.getElementById("chapter");
+
+        // Clear current options
+        chapterDropdown.innerHTML = '<option value="">Select Chapter</option>';
+
+        if (subjectId) {
+            fetch(`/get_chapters/${subjectId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.chapters.forEach(chapter => {
+                        let option = document.createElement("option");
+                        option.value = chapter.id;
+                        option.textContent = chapter.name;
+                        chapterDropdown.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error loading chapters:", error));
+        }
+    });
+</script>
+{% endblock %}

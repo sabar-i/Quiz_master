@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Quiz{% endblock %}
+
+{% block content %}
+<h2>Edit Quiz</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="title">Quiz Title</label>
+        <input type="text" id="title" name="title" class="form-control" value="{{ quiz.title }}" required>
+    </div>
+
+    <!-- CHAPTER SELECTION -->
+    <div class="form-group">
+        <label for="chapterSelect">Chapter</label>
+        <select id="chapterSelect" name="chapter_id" class="form-control" required>
+            <option value="">Select Chapter</option>
+            {% for chapter in chapters %}
+            <option value="{{ chapter.id }}" {% if chapter.id == quiz.chapter_id %}selected{% endif %}>
+                {{ chapter.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- DATE OF QUIZ -->
+    <div class="form-group">
+        <label for="date_of_quiz">Date of Quiz</label>
+        <input type="date" id="date_of_quiz" name="date_of_quiz" class="form-control" value="{{ quiz.date_of_quiz }}" required>
+    </div>
+
+    <!-- TIME DURATION -->
+    <div class="form-group">
+        <label for="time_duration">Time Duration</label>
+        <input type="time" id="time_duration" name="time_duration" class="form-control" value="{{ quiz.time_duration }}" required>
+    </div>
+
+    <!-- REMARKS -->
+    <div class="form-group">
+        <label for="remarks">Remarks</label>
+        <textarea id="remarks" name="remarks" class="form-control" rows="3">{{ quiz.remarks }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+
+<!-- ADDITIONAL BUTTONS FOR QUESTIONS -->
+<div class="mt-4">
+    <a href="{{ url_for('admin.add_questions', quiz_id=quiz.id) }}" class="btn btn-primary">➕ Add Questions</a>
+    <a href="{{ url_for('admin.edit_questions', quiz_id=quiz.id) }}" class="btn btn-warning">✏️ Edit Questions</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Questions{% endblock %}
+
+{% block content %}
+<h2>Edit Questions for Quiz: {{ quiz.title }}</h2>
+
+<form method="POST">
+    {% for question in questions %}
+    <div class="form-group">
+        <label for="question_text_{{ question.id }}">Question</label>
+        <textarea id="question_text_{{ question.id }}" name="question_text_{{ question.id }}" class="form-control" required>{{ question.question_text }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="option_1_{{ question.id }}">Option 1</label>
+        <input type="text" id="option_1_{{ question.id }}" name="option_1_{{ question.id }}" class="form-control" value="{{ question.option_1 }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="option_2_{{ question.id }}">Option 2</label>
+        <input type="text" id="option_2_{{ question.id }}" name="option_2_{{ question.id }}" class="form-control" value="{{ question.option_2 }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="option_3_{{ question.id }}">Option 3</label>
+        <input type="text" id="option_3_{{ question.id }}" name="option_3_{{ question.id }}" class="form-control" value="{{ question.option_3 }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="option_4_{{ question.id }}">Option 4</label>
+        <input type="text" id="option_4_{{ question.id }}" name="option_4_{{ question.id }}" class="form-control" value="{{ question.option_4 }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="correct_answer_{{ question.id }}">Correct Answer</label>
+        <select id="correct_answer_{{ question.id }}" name="correct_answer_{{ question.id }}" class="form-control" required>
+            <option value="option_1" {% if question.correct_answer == "option_1" %}selected{% endif %}>Option 1</option>
+            <option value="option_2" {% if question.correct_answer == "option_2" %}selected{% endif %}>Option 2</option>
+            <option value="option_3" {% if question.correct_answer == "option_3" %}selected{% endif %}>Option 3</option>
+            <option value="option_4" {% if question.correct_answer == "option_4" %}selected{% endif %}>Option 4</option>
+        </select>
+    </div>
+    <hr>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Back</a>
+</form>
+{% endblock %}
